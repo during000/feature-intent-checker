@@ -1,0 +1,26 @@
+-- 为所有空的 intent_text 生成简单的归一化文本
+-- 提取关键动词：打开、搜索、播放等
+
+UPDATE function_records
+SET intent_text = 
+  CASE 
+    WHEN search_text ~* '打开|进入|启动' AND search_text ~* '搜索|查找' THEN '打开 搜索'
+    WHEN search_text ~* '打开|进入|启动' AND search_text ~* '播放|听' THEN '打开 播放'
+    WHEN search_text ~* '打开|进入|启动' THEN '打开'
+    WHEN search_text ~* '搜索|查找' THEN '搜索'
+    WHEN search_text ~* '播放|听' THEN '播放'
+    WHEN search_text ~* '点赞|赞' THEN '点赞'
+    WHEN search_text ~* '评论|留言' THEN '评论'
+    WHEN search_text ~* '关注|订阅' THEN '关注'
+    WHEN search_text ~* '分享|转发' THEN '分享'
+    WHEN search_text ~* '收藏|保存' THEN '收藏'
+    WHEN search_text ~* '删除|移除' THEN '删除'
+    WHEN search_text ~* '编辑|修改' THEN '编辑'
+    WHEN search_text ~* '查看|浏览' THEN '查看'
+    WHEN search_text ~* '下载' THEN '下载'
+    WHEN search_text ~* '上传|发布' THEN '上传'
+    WHEN search_text ~* '登录|登陆' THEN '登录'
+    WHEN search_text ~* '退出|登出' THEN '退出'
+    ELSE regexp_replace(search_text, '[0-9a-zA-Z\u4e00-\u9fa5]{3,}(?=[^打开搜索播放])', '', 'g')
+  END
+WHERE intent_text IS NULL OR intent_text = '';

@@ -1,0 +1,8 @@
+-- 添加 intent_text 字段用于存储归一化后的功能意图
+alter table function_records add column if not exists intent_text text;
+
+-- 创建索引以提高意图查询性能
+create index if not exists idx_function_records_intent_text on function_records using gin(to_tsvector('simple', intent_text));
+
+-- 为现有记录生成默认 intent_text（后续会通过重新上传覆盖）
+update function_records set intent_text = search_text where intent_text is null;

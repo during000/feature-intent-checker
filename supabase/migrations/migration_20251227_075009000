@@ -1,0 +1,17 @@
+-- 创建存储桶
+insert into storage.buckets (id, name, public)
+values ('csv-files', 'csv-files', true)
+on conflict (id) do nothing;
+
+-- 设置存储桶策略
+create policy "Allow public uploads"
+on storage.objects for insert
+with check (bucket_id = 'csv-files');
+
+create policy "Allow public read"
+on storage.objects for select
+using (bucket_id = 'csv-files');
+
+create policy "Allow public delete"
+on storage.objects for delete
+using (bucket_id = 'csv-files');

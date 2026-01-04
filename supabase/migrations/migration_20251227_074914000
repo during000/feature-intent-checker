@@ -1,0 +1,55 @@
+-- 创建功能记录表
+create table if not exists function_records (
+  id bigserial primary key,
+  source_dir text not null,
+  source_file text not null,
+  row_number integer not null,
+  level_1 text,
+  function_point text,
+  sub_function text,
+  search_text text not null,
+  created_at timestamp with time zone default now()
+);
+
+-- 创建索引以提高搜索性能
+create index idx_function_records_search_text on function_records using gin(to_tsvector('simple', search_text));
+create index idx_function_records_source_file on function_records(source_file);
+
+-- 启用行级安全
+alter table function_records enable row level security;
+
+-- 允许所有人读取（简化权限）
+create policy "Allow public read access" on function_records
+  for select using (true);
+
+-- 允许所有人插入（简化权限）
+create policy "Allow public insert access" on function_records
+  for insert with check (true);
+
+-- 允许所有人删除（简化权限）
+create policy "Allow public delete access" on function_records
+  for delete using (true);
+
+-- 创建CSV文件元数据表
+create table if not exists csv_files (
+  id bigserial primary key,
+  filename text not null unique,
+  file_path text not null,
+  record_count integer default 0,
+  uploaded_at timestamp with time zone default now()
+);
+
+-- 启用行级安全
+alter table csv_files enable row level security;
+
+-- 允许所有人读取
+create policy "Allow public read access on csv_files" on csv_files
+  for select using (true);
+
+-- 允许所有人插入
+create policy "Allow public insert access on csv_files" on csv_files
+  for insert with check (true);
+
+-- 允许所有人更新
+create policy "Allow public update access on csv_files" on csv_files
+  for update using (true);

@@ -1,0 +1,32 @@
+-- 重新生成 intent_text，保留应用名和模块名
+UPDATE function_records
+SET intent_text = 
+  CASE 
+    -- 全民K歌相关
+    WHEN search_text ~* '全民K歌' AND search_text ~* '搜索|查找' THEN '全民K歌 打开 搜索'
+    WHEN search_text ~* '全民K歌' AND search_text ~* '播放|听' THEN '全民K歌 打开 播放'
+    WHEN search_text ~* '全民K歌' AND search_text ~* '打开|进入' THEN '全民K歌 打开'
+    
+    -- 抖音相关
+    WHEN search_text ~* '抖音' AND search_text ~* '搜索|查找' THEN '抖音 打开 搜索'
+    WHEN search_text ~* '抖音' AND search_text ~* '播放|观看' THEN '抖音 打开 播放'
+    WHEN search_text ~* '抖音' AND search_text ~* '打开|进入' THEN '抖音 打开'
+    
+    -- 微信相关
+    WHEN search_text ~* '微信' AND search_text ~* '搜索|查找' THEN '微信 打开 搜索'
+    WHEN search_text ~* '微信' AND search_text ~* '发送|发' THEN '微信 发送'
+    WHEN search_text ~* '微信' AND search_text ~* '打开|进入' THEN '微信 打开'
+    
+    -- 通用动作（无应用名）
+    WHEN search_text ~* '打开|进入' AND search_text ~* '搜索|查找' THEN '打开 搜索'
+    WHEN search_text ~* '打开|进入' AND search_text ~* '播放|听' THEN '打开 播放'
+    WHEN search_text ~* '打开|进入' THEN '打开'
+    WHEN search_text ~* '搜索|查找' THEN '搜索'
+    WHEN search_text ~* '播放|听' THEN '播放'
+    WHEN search_text ~* '点赞' THEN '点赞'
+    WHEN search_text ~* '评论' THEN '评论'
+    WHEN search_text ~* '关注' THEN '关注'
+    WHEN search_text ~* '分享' THEN '分享'
+    
+    ELSE SUBSTRING(search_text, 1, 20)
+  END;
