@@ -1,0 +1,8 @@
+[build]
+  command = "npm ci && npm run build && rm -rf site && mkdir site && cp -R dist/* site/"
+  publish = "site"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
