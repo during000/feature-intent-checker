@@ -1,5 +1,5 @@
 [build]
-  command = "npm install && npm run build && rm -rf site && mkdir site && cp -R dist/* site/"
+  command = "corepack enable && pnpm install --frozen-lockfile=false && pnpm build && rm -rf site && mkdir site && cp -R dist/* site/"
   publish = "site"
 
 [[redirects]]
