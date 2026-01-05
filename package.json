@@ -5,11 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "NODE_ENV=development vite build --mode development",
-    "build:prod": "vite build",
-    "lint": "eslint .",
-    "preview": "vite preview",
-    "pInstall": "pnpm install"
+    "build": "vite build",
+    "preview": "vite preview"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.1",
